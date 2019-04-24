@@ -5,9 +5,9 @@ using namespace std;
 
 int main()
 {
-	metody odczyt;
-	/*double wypelnienie[] = { 0.5 };
-	
+	obslugapliku odczyt;
+	/*double wypelnienie[] = { 1 };
+
 		for (int i = 0; i < 1; i++)
 		{
 			generowanie(5, wypelnienie[i]);
@@ -17,6 +17,7 @@ int main()
 	cout << "Wezel\tPoprz.\tDystans" << endl;
 	for (int i = 0; i < 6; i++)
 		wypiszdane(i, tab[i]);
+	konwertuj(macierz, 6);
 
 	//kolejka proba(5);
 	//proba.dodaj_wartosc(1, 5);

@@ -3,15 +3,15 @@
 #include <iostream>
 #include <fstream>
 #include "algorytm.h"
+#include "lista.h"
 
 using namespace std;
 
-class metody
+class obslugapliku
 {
-public:
 	fstream plik;
 	string sciezka = "graf.txt";
-
+public:
 	void zapis(int** tablica, int rozmiar) // zapisywanie tablicy do pliku
 	{
 		//fstream plik;
@@ -50,6 +50,8 @@ public:
 		plik.close();
 		return tablica;
 	}
+
+	
 };
 
 void generowanie(int rozmiar, double wypelnienie)
@@ -60,14 +62,29 @@ void generowanie(int rozmiar, double wypelnienie)
 	for (int i = 0; i < rozmiar; ++i)
 	{
 		tab2[i] = new int[rozmiar]; //alokacja pamieci
-		for (int j = 0; j < rozmiar; ++j) //wpisanie randomowych wartosci do tablicy
-			tab2[i][j] = (rand() % 10 + 1);
+		for (int j = 0; j < rozmiar; ++j)
+			//wpisanie randomowych wartosci do tablicy
+		{
+			//if (i > j)
+			//{
+				tab2[i][j] = (rand() % 10 + 1);
+			//}
+		}
 	}
+
+	//for (int k = 0; k < rozmiar; k++) // odbicie lustrzane
+	//{
+	//	for (int w = 0; w < rozmiar; w++)
+	//	{
+	//		tab2[k][w] = tab2[w][k];
+	//	}
+	//}
 
 	for (int p = 0; p < rozmiar; p++)
 	{
 		tab2[p][p] = 0;
 	}
+
 	while (l_zer != procent)
 	{
 		int kolumna = rand() % rozmiar;
@@ -81,7 +98,7 @@ void generowanie(int rozmiar, double wypelnienie)
 	}
 
 	//wypisz tab2[w][k]
-	metody plik;
+	obslugapliku plik;
 	cout << "TABLICA" << endl;
 	for (int i = 0; i < rozmiar; ++i, cout << endl)
 		for (int j = 0; j < rozmiar; ++j)
@@ -90,7 +107,7 @@ void generowanie(int rozmiar, double wypelnienie)
 	plik.zapis(tab2, rozmiar);
 
 	//funkcja algorytmu dijkstry 
-	dane* tab = Dijkstra(tab2, rozmiar, 1);
+	dane* tab = Dijkstra(tab2, rozmiar, 0);
 	cout << "Wezel\tPoprz.\tDystans" << endl;
 	for (int i = 0; i < rozmiar; i++)
 		wypiszdane(i, tab[i]);
@@ -99,6 +116,26 @@ void generowanie(int rozmiar, double wypelnienie)
 	for (int i = 0; i < rozmiar; ++i)
 		delete[] tab2[i]; //uwolnienie pamieci
 	delete[] tab2;
+}
+
+lista* konwertuj(int** macierz, int liczba_elementow)
+{
+	lista* graf = new lista[liczba_elementow];
+	for (int i = 0; i < liczba_elementow; i++)
+	{
+		for (int j = 0; j < liczba_elementow; j++)
+		{
+			if (macierz[i][j] > 0)
+				graf[i].dodaj_element(j, macierz[i][j]);
+
+		}
+	}
+	for (int i = 0; i < liczba_elementow; i++) {
+		cout << i << ": " << endl;
+		graf[i].wyswietl();
+
+	}
+	return graf;
 }
 
 #endif GENERATOR_H
