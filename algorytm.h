@@ -1,6 +1,7 @@
 ﻿#ifndef DIJKSTRA_H
 #define DIJKSTRA_H
 #include <iostream>
+#include "lista.h"
 
 using namespace std;
 
@@ -125,7 +126,7 @@ dane* Dijkstra(int** macierz, int n, int start)
 	int u;
 	while (!kolejka.czy_pusta())
 	{
-		kolejka.wyswietl();
+		//kolejka.wyswietl();
 		u = kolejka.zwroc_wartosc();
 		tab[u].odwiedzony = true;
 		for (int i = 0; i < n; i++)
@@ -146,46 +147,49 @@ dane* Dijkstra(int** macierz, int n, int start)
 	return tab;
 }
 
-//dane* Dijkstra_lista(lista* graf, int n, int start)
+dane* Dijkstra_lista(lista* graf, int n, int start)
+{
+	dane* tab = new dane[n];
+	for (int i = 0; i < n; i++)
+	{
+		tab[i].dystans = INT_MAX; // ustawiamy na maksymalny dystans
+		tab[i].odwiedzony = false; // ustawiamy, ze nie byl odwiedzony
+		tab[i].poprzednik = -1; // przyjmujemy -1
+	}
+	kolejka kolejka(n);
+	kolejka.dodaj_wartosc(start, 0);
+	tab[start].dystans = 0;
+	int u;
+	while (!kolejka.czy_pusta())
+	{
+		//kolejka.wyswietl();
+		u = kolejka.zwroc_wartosc();
+		tab[u].odwiedzony = true;
+
+		for (int i = 0; i < n; i++)
+		{
+			if (graf[u].sprawdz(i) >0 && graf[u].sprawdz(i) + tab[u].dystans < tab[i].dystans)
+			{
+				tab[i].dystans = graf[u].sprawdz(i) + tab[u].dystans;
+				tab[i].poprzednik = u;
+			}
+			if (graf[u].sprawdz(i) > 0 && !tab[i].odwiedzony)
+			{
+				kolejka.dodaj_wartosc(i, tab[i].dystans);
+			}
+
+		}
+
+	}
+	return tab;
+}
+
+//void wypiszsciezke(dane d, int j) //wypisywanie calej sciezki
 //{
-//	dane* tab = new dane[n];
-//	for (int i = 0; i < n; i++)
-//	{
-//		tab[i].dystans = INT_MAX; // ustawiamy na maksymalny dystans
-//		tab[i].odwiedzony = false; // ustawiamy, ze nie byl odwiedzony
-//		tab[i].poprzednik = -1; // przyjmujemy -1
-//	}
-//	kolejka kolejka(n);
-//	kolejka.dodaj_wartosc(start, 0);
-//	tab[start].dystans = 0;
-//	int u;
-//	while (!kolejka.czy_pusta())
-//	{
-//		kolejka.wyswietl();
-//		u = kolejka.zwroc_wartosc();
-//		tab[u].odwiedzony = true;
-//
-//		element* iterator = head;
-//		do
-//		{
-//			if (wierzcholek == iterator->wierzcholek)
-//			{
-//				if (graf[u] > 0 && graf[u] + tab[u].dystans < tab[i].dystans) // dla kazdego wierzcholka z listy sprawdz warunki
-//				{
-//					tab[i].dystans = graf[u] + tab[u].dystans;
-//					tab[i].poprzednik = u;
-//				}
-//				if (graf[u] > 0 && !tab[i].odwiedzony)
-//				{
-//					kolejka.dodaj_wartosc(i, tab[i].dystans);
-//				}
-//			}
-//			iterator = iterator->nastepny;
-//		} while (iterator);
-//			
-//
-//	}
-//	return tab;
+//	if (d.poprzednik == -1)
+//		return;
+//	wypiszsciezke(d.poprzednik, j);
+//	cout << j;
 //}
 
 void wypiszdane(int i, dane d) 
@@ -199,11 +203,45 @@ void wypiszdane(int i, dane d)
 	{
 		if (d.poprzednik == -1)
 			cout << "brak";
-		else 
+		else
+		{
 			cout << d.poprzednik;
+		}
 		cout << "\t" << d.dystans;
 	}
 	cout << endl;
+}
+
+
+void wypiszdane2(dane* d, int rozmiar)
+{
+	int pom;
+	for (int i = 0; i < rozmiar; i++)
+	{
+		cout << i << "\t";
+		if (!d[i].odwiedzony)
+		{
+			cout << "nieodwiedzony";
+		}
+		else
+		{
+			if (d[i].poprzednik == -1)
+				cout << "brak";
+			else
+			{
+				pom = d[i].poprzednik;
+				while (pom != -1)
+				{
+					cout << pom << " ";
+					pom = d[pom].poprzednik;
+				}
+			
+			}
+			cout << "\t" << d[i].dystans;
+		}
+		cout << endl;
+	}
+	
 }
 
 #endif DIJKSTRA_H

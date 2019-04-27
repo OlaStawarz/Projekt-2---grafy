@@ -2,44 +2,67 @@
 #define GENERATOR_H
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <string>
+
 #include "algorytm.h"
 #include "lista.h"
 
 using namespace std;
+using tp = chrono::time_point<std::chrono::system_clock>;
+using duration = chrono::duration<float>;
+
 
 class obslugapliku
 {
 	fstream plik;
-	string sciezka = "graf.txt";
+	
 public:
-	void zapis(int** tablica, int rozmiar) // zapisywanie tablicy do pliku
+	void zapis(int** tablica, int rozmiar, int numer) // zapisywanie tablicy do pliku
 	{
-		//fstream plik;
-		//string sciezka = "graf.txt"; // towrzenie pliku .txt o nazwie rownej rozmiarowi
+		string sciezka = /*"data//" +*/ to_string(numer) + ".txt"; // towrzenie pliku .txt
 		plik.open(sciezka, fstream::out | fstream::app);
-
+		int liczba_krawedzi = 0;
 		for (int i = 0; i < rozmiar; i++)
+			for (int j = 0; j < rozmiar; j++)
+			{
+				if (tablica[i][j] > 0)
+				{
+					liczba_krawedzi++;
+				}
+			}				
+		plik << liczba_krawedzi << " " << rozmiar << " " << "0" << endl;
+
+		for (int i = 0; i < rozmiar; i++) //zapis do pliku
 		{
-			for (int j = 0; j < rozmiar; j++) {
-				plik << tablica[i][j] << " ";
+			for (int j = 0; j < rozmiar; j++) 
+			{
+				if(tablica[i][j]>0)
+				plik << i << " " << j << " " << tablica[i][j] << endl; 
 			}
-			plik << endl;
 		}
 		plik << endl;
 		plik.close();
 	}
 
-	int** wczytaj(int rozmiar)
+	int** wczytaj(int &rozmiar, string sciezka) 
 	{
-		/*fstream plik;
-		string sciezka = "graf.txt";*/
 		plik.open(sciezka, fstream::in);
+		int liczba_krawedzi, wierzcholek_startowy, wierzcholek_poczatkowy, wierzcholek_koncowy, waga;
+		plik >> liczba_krawedzi;
+		plik >> rozmiar;
+		plik >> wierzcholek_startowy;
 		int **tablica = new int *[rozmiar]; //alokacja pamieci
 		for (int i = 0; i < rozmiar; ++i)
 		{
 			tablica[i] = new int[rozmiar]; //alokacja pamieci
-			for (int j = 0; j < rozmiar; ++j)
-				plik >> tablica[i][j];
+			for (int j = 0; j < rozmiar; ++j) //wype³nienie macierzy zerami
+				tablica[i][j] = 0;
+		}
+		for (int j = 0; j < liczba_krawedzi; j++) //wype³nienie zadanym szeregiem danych
+		{
+			plik >> wierzcholek_poczatkowy >> wierzcholek_koncowy >> waga;
+			tablica[wierzcholek_poczatkowy][wierzcholek_koncowy] = waga;
 		}
 		//w celu sprawdzenia czy dobrze wczytuje z pliku odkomentowac ta funckje
 		/*cout << "TABLICA WCZYTANA Z PLIKU" << endl;
@@ -50,11 +73,58 @@ public:
 		plik.close();
 		return tablica;
 	}
+	void zapiszczas_macierz(duration d) // zapisz czasu do pliku
+	{
+		string sciezka = "zapisczasu_macierz.txt";
+		plik.open(sciezka, fstream::out | fstream::app);
+		if (plik.is_open())
+		{
+			plik << d.count();
+			plik << endl;
+		}
+		else
+			cout << "Nie udalo sie zapisac do pliku";
 
-	
+		plik.close();
+	}
+	void zapiszczas_lista(duration d) // zapisz czasu do pliku
+	{
+		string sciezka = "zapisczasu_lista.txt";
+		plik.open(sciezka, fstream::out | fstream::app);
+		if (plik.is_open())
+		{
+			plik << d.count();
+			plik << endl;
+		}
+		else
+			cout << "Nie udalo sie zapisac do pliku";
+
+		plik.close();
+	}
+
 };
 
-void generowanie(int rozmiar, double wypelnienie)
+lista* konwertuj(int** macierz, int liczba_elementow)
+{
+	lista* graf = new lista[liczba_elementow];
+	for (int i = 0; i < liczba_elementow; i++)
+	{
+		for (int j = 0; j < liczba_elementow; j++)
+		{
+			if (macierz[i][j] > 0)
+				graf[i].dodaj_element(j, macierz[i][j]);
+
+		}
+	}
+	//for (int i = 0; i < liczba_elementow; i++) {
+	//	cout << i << ": " << endl;
+	//	//graf[i].wyswietl();
+
+	//}
+	return graf;
+}
+
+void generowanie(int rozmiar, double wypelnienie, int numer)
 {
 	int  procent = (1 - wypelnienie)*(rozmiar*(rozmiar - 1));
 	int l_zer = 0;
@@ -65,20 +135,9 @@ void generowanie(int rozmiar, double wypelnienie)
 		for (int j = 0; j < rozmiar; ++j)
 			//wpisanie randomowych wartosci do tablicy
 		{
-			//if (i > j)
-			//{
 				tab2[i][j] = (rand() % 10 + 1);
-			//}
 		}
 	}
-
-	//for (int k = 0; k < rozmiar; k++) // odbicie lustrzane
-	//{
-	//	for (int w = 0; w < rozmiar; w++)
-	//	{
-	//		tab2[k][w] = tab2[w][k];
-	//	}
-	//}
 
 	for (int p = 0; p < rozmiar; p++)
 	{
@@ -99,18 +158,28 @@ void generowanie(int rozmiar, double wypelnienie)
 
 	//wypisz tab2[w][k]
 	obslugapliku plik;
-	cout << "TABLICA" << endl;
+	/*cout << "TABLICA" << endl;
 	for (int i = 0; i < rozmiar; ++i, cout << endl)
 		for (int j = 0; j < rozmiar; ++j)
 			cout << tab2[i][j] << '\t';
-	cout << endl;
-	plik.zapis(tab2, rozmiar);
+	cout << endl;*/
+	plik.zapis(tab2, rozmiar, numer);
 
 	//funkcja algorytmu dijkstry 
-	dane* tab = Dijkstra(tab2, rozmiar, 0);
-	cout << "Wezel\tPoprz.\tDystans" << endl;
-	for (int i = 0; i < rozmiar; i++)
-		wypiszdane(i, tab[i]);
+	//start = chrono::system_clock::now();
+	//dane* tab = Dijkstra(tab2, rozmiar, 0);
+	//d = chrono::system_clock::now() - start;
+	//plik.zapiszczas(d);
+	//cout << d.count() << endl;
+	//cout << "Wezel\tPoprz.\tDystans" << endl;
+	//*for (int i = 0; i < rozmiar; i++)
+	//	wypiszdane(i, tab[i]);*/
+	//wypiszdane2(tab, rozmiar);
+	//lista* graf = konwertuj(tab2, rozmiar);
+	//tab = Dijkstra_lista(graf, rozmiar, 0);
+	//cout << "Wezel\tPoprz.\tDystans" << endl;
+	//wypiszdane2(tab, rozmiar);
+
 
 	//zniszcz tab2
 	for (int i = 0; i < rozmiar; ++i)
@@ -118,24 +187,6 @@ void generowanie(int rozmiar, double wypelnienie)
 	delete[] tab2;
 }
 
-lista* konwertuj(int** macierz, int liczba_elementow)
-{
-	lista* graf = new lista[liczba_elementow];
-	for (int i = 0; i < liczba_elementow; i++)
-	{
-		for (int j = 0; j < liczba_elementow; j++)
-		{
-			if (macierz[i][j] > 0)
-				graf[i].dodaj_element(j, macierz[i][j]);
 
-		}
-	}
-	for (int i = 0; i < liczba_elementow; i++) {
-		cout << i << ": " << endl;
-		graf[i].wyswietl();
-
-	}
-	return graf;
-}
 
 #endif GENERATOR_H

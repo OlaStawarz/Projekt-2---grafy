@@ -1,3 +1,5 @@
+#ifndef LISTA_H
+#define LISTA_H
 #include <iostream>
 
 using namespace std;
@@ -67,4 +69,28 @@ public:
 		}
 	return -1;		
 	}
+	void wyswietl_wierzcholki()
+	{
+		element* iterator = head;
+			do
+			{
+				cout << iterator->wierzcholek << " ";
+				iterator = iterator->nastepny;
+			} while (iterator);
+			cout << endl;
+	}
+
+	int liczba_sasiadow()
+	{
+		int liczba = 0;
+		element* iterator = head;
+		while (iterator)
+		{
+			liczba++;
+			iterator = iterator->nastepny;
+		} 
+		return liczba;
+	}
+	
 };
+#endif
