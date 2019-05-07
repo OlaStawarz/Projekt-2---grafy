@@ -13,47 +13,79 @@ int main()
 	duration d;
 
 	obslugapliku odczyt;
-	int rozmiar;
+	int rozmiar=1;
 	string sciezka;
-	double wypelnienie[] = { 1 }; // { 1, 0.75, 0.5, 0.25 };
-	int rozmiary[] = { 10, 50 }; // , 100, 500, 1000};
-	int numer = 0;
-	//
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	for (int j = 0; j < 1; j++)
-	//	{
-	//		for (int k = 0; k < 1; k++)
-	//		{
-	//			generowanie(rozmiary[i], wypelnienie[j], numer);
-	//			numer++;
-	//		}
-	//	}
-	//}
+
+	generowanie(10, 1, rozmiar);
+	sciezka.clear();
+	sciezka += to_string(rozmiar) + ".txt"; //utowrzenie pliku o nazwie 1.txt
+
+	cout << "PRZYKLADOWE DZIALANIE PROGRAMU" << endl;
+	cout << "PELNY GRAF O 10 WIERZCHOLKACH" << endl << endl;
 	
-	for (int i = 0; i < 5; i++)
+	int ** macierz = odczyt.wczytaj(rozmiar, sciezka); //wczytanie grafu z pliku
+	start = chrono::system_clock::now();
+	dane* tab = Dijkstra(macierz, rozmiar, 0);
+	d = chrono::system_clock::now() - start;
+	odczyt.zapiszczas_macierz(d);
+
+	cout << "Rozwiazanie dla reprezentacji w postaci macierzy sasiedztwa: " << endl;
+	cout << "Poczatek\tSciezka\tDystans" << endl;
+	wypiszdane(tab, rozmiar);
+
+	lista* graf = konwertuj(macierz, rozmiar); //kontwersja
+	start = chrono::system_clock::now();
+	tab = Dijkstra_lista(graf, rozmiar, 0);
+	d = chrono::system_clock::now() - start;
+	odczyt.zapiszczas_lista(d);
+
+	cout << "Rozwiazanie dla reprezentacji w postaci listy sasiedztwa: " << endl;
+	cout << "Poczatek\tSciezka.\tDystans" << endl;
+	wypiszdane(tab, rozmiar);
+
+	
+	//Poni¿ej zakomentowany fragment programu sluzacy do testow programu i zapisu wynikow
+
+	/*double wypelnienie[] = { 1, 0.75, 0.5, 0.25 };
+	int rozmiary[] = { 10, 50, 100, 500, 1000};
+	int numer = 0;
+	
+	for (int i = 0; i < 5; i++) //petla rozmiarow
+	{
+		for (int j = 0; j < 4; j++) //petla wypelnienia
+		{
+			for (int k = 0; k < 100; k++) //ilosc grafow do wygenerowania
+			{
+				generowanie(rozmiary[i], wypelnienie[j], numer);
+				numer++;
+			}
+		}
+	}*/
+	
+	/*for (int i = 0; i < 500; i++)
 	{
 		sciezka.clear();
 		sciezka += to_string(i) + ".txt";
+		
 		int ** macierz = odczyt.wczytaj(rozmiar, sciezka);
 		start = chrono::system_clock::now();
 		dane* tab = Dijkstra(macierz, rozmiar, 0);
 		d = chrono::system_clock::now() - start;
 		odczyt.zapiszczas_macierz(d);
+		
 		cout << "Wezel\tPoprz.\tDystans" << endl;
-		wypiszdane2(tab, rozmiar);
+		wypiszdane(tab, rozmiar);
+		
 		lista* graf = konwertuj(macierz, rozmiar);
 		start = chrono::system_clock::now();
 		tab = Dijkstra_lista(graf, rozmiar, 0);
 		d = chrono::system_clock::now() - start;
 		odczyt.zapiszczas_lista(d);
+		
 		cout << "Wezel\tPoprz.\tDystans" << endl;
-		wypiszdane2(tab, rozmiar);		
-	}
+		wypiszdane(tab, rozmiar);		
+	}*/
 
-	//sciezka = "graf.txt";
-	
-	
 
 	system("pause");
 	return 0;

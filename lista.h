@@ -4,7 +4,7 @@
 
 using namespace std;
 
-struct element
+struct element //struktura elementu listy
 {
 	int wierzcholek;
 	int priorytet;
@@ -19,7 +19,7 @@ struct element
 
 class lista
 {
-	element* head;
+	element* head; // element jest wskaznikiem na poczatek
 public:
 	lista()
 	{
@@ -29,14 +29,14 @@ public:
 	{
 		element* pom = new element(wierzcholek, priorytet);
 		
-		if (head == NULL)
+		if (head == NULL) //jesli 0 to przypisz wartosc
 		{
 			head = pom;
 		}
-		else
+		else // w przeciwnym przypadku przypisz do nastepnego elementu
 		{
 			element* iterator = head;
-			while (iterator->nastepny)
+			while (iterator->nastepny) //szukacj az nie istnieje nastepny element
 			{
 				iterator = iterator->nastepny;
 			}
@@ -53,14 +53,15 @@ public:
 			iterator = iterator->nastepny;
 		} while (iterator);
 	}
+
 	int sprawdz(int wierzcholek)
 	{
 		if (head != NULL)
 		{
 			element* iterator = head;
-			do
+			do //wykonuj dopoki istnieje iterator (czyli istnieje krawedz)
 			{
-				if (wierzcholek == iterator->wierzcholek)
+				if (wierzcholek == iterator->wierzcholek) // jesli istnieje zwroc priorytet
 				{
 					return iterator->priorytet;
 				}
@@ -69,6 +70,7 @@ public:
 		}
 	return -1;		
 	}
+
 	void wyswietl_wierzcholki()
 	{
 		element* iterator = head;
@@ -80,7 +82,7 @@ public:
 			cout << endl;
 	}
 
-	int liczba_sasiadow()
+	int liczba_sasiadow() 
 	{
 		int liczba = 0;
 		element* iterator = head;

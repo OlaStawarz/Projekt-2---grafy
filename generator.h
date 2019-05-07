@@ -156,7 +156,6 @@ void generowanie(int rozmiar, double wypelnienie, int numer)
 
 	}
 
-	//wypisz tab2[w][k]
 	obslugapliku plik;
 	/*cout << "TABLICA" << endl;
 	for (int i = 0; i < rozmiar; ++i, cout << endl)
@@ -165,28 +164,10 @@ void generowanie(int rozmiar, double wypelnienie, int numer)
 	cout << endl;*/
 	plik.zapis(tab2, rozmiar, numer);
 
-	//funkcja algorytmu dijkstry 
-	//start = chrono::system_clock::now();
-	//dane* tab = Dijkstra(tab2, rozmiar, 0);
-	//d = chrono::system_clock::now() - start;
-	//plik.zapiszczas(d);
-	//cout << d.count() << endl;
-	//cout << "Wezel\tPoprz.\tDystans" << endl;
-	//*for (int i = 0; i < rozmiar; i++)
-	//	wypiszdane(i, tab[i]);*/
-	//wypiszdane2(tab, rozmiar);
-	//lista* graf = konwertuj(tab2, rozmiar);
-	//tab = Dijkstra_lista(graf, rozmiar, 0);
-	//cout << "Wezel\tPoprz.\tDystans" << endl;
-	//wypiszdane2(tab, rozmiar);
-
-
 	//zniszcz tab2
 	for (int i = 0; i < rozmiar; ++i)
 		delete[] tab2[i]; //uwolnienie pamieci
 	delete[] tab2;
 }
-
-
 
 #endif GENERATOR_H

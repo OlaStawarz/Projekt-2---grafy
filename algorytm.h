@@ -18,9 +18,9 @@ class kolejka
 	int** tablica;
 	int liczba_elementow;
 public:
-	kolejka(int max_wielkosc)
+	kolejka(int max_wielkosc) //konstruktor parametryczny
 	{
-		tablica = new int* [max_wielkosc];
+		tablica = new int* [max_wielkosc]; //tworzenie tablicy przechowującej numer wierzchołka i jego priorytet
 		for (int i = 0; i < max_wielkosc; i++)
 			tablica[i] = new int[2];
 		liczba_elementow = 0;
@@ -33,14 +33,14 @@ public:
 		{
 			for (int i = 0; i < liczba_elementow; i++)
 			{
-				tablica[i][1] = tablica[i + 1][1];
-				tablica[i][0] = tablica[i + 1][0];
+				tablica[i][1] = tablica[i + 1][1]; //priorytet
+				tablica[i][0] = tablica[i + 1][0]; //wierzchołek
 			}
 			liczba_elementow--;
 		}
 		return tmp;
 	}
-	void dodaj_wartosc(int wierzcholek, int priorytet)
+	void dodaj_wartosc(int wierzcholek, int priorytet) //dodawanie wartości do tablicy
 	{
 		if (liczba_elementow == 0)
 		{
@@ -53,9 +53,9 @@ public:
 			int i;
 			for (i = 0; i < liczba_elementow; i++)
 			{
-				if (tablica[i][0] == wierzcholek)
+				if (tablica[i][0] == wierzcholek) 
 				{
-					if (tablica[i][1] > priorytet)
+					if (tablica[i][1] > priorytet) //gdy lepszy priorytet zamień wartość
 						tablica[i][1] = priorytet;
 					return;
 				}
@@ -111,7 +111,7 @@ int szukajMinimum(int n, dane* tab)
 	return min;
 }
 
-dane* Dijkstra(int** macierz, int n, int start) 
+dane* Dijkstra(int** macierz, int n, int start) //Dijkstra dla macierzy
 {
 	dane* tab = new dane[n];
 	for (int i = 0; i < n; i++) 
@@ -120,9 +120,9 @@ dane* Dijkstra(int** macierz, int n, int start)
 		tab[i].odwiedzony = false; // ustawiamy, ze nie byl odwiedzony
 		tab[i].poprzednik = -1; // przyjmujemy -1
 	}
-	kolejka kolejka(n);
+	kolejka kolejka(n); //kolejka o zadanym rozmiarze
 	kolejka.dodaj_wartosc(start, 0);
-	tab[start].dystans = 0;
+	tab[start].dystans = 0; //dystans dla wierzcholka poczatkowego rowny 0
 	int u;
 	while (!kolejka.czy_pusta())
 	{
@@ -147,14 +147,14 @@ dane* Dijkstra(int** macierz, int n, int start)
 	return tab;
 }
 
-dane* Dijkstra_lista(lista* graf, int n, int start)
+dane* Dijkstra_lista(lista* graf, int n, int start) //Dijkstra dla listy
 {
 	dane* tab = new dane[n];
 	for (int i = 0; i < n; i++)
 	{
-		tab[i].dystans = INT_MAX; // ustawiamy na maksymalny dystans
-		tab[i].odwiedzony = false; // ustawiamy, ze nie byl odwiedzony
-		tab[i].poprzednik = -1; // przyjmujemy -1
+		tab[i].dystans = INT_MAX; 
+		tab[i].odwiedzony = false; 
+		tab[i].poprzednik = -1; 
 	}
 	kolejka kolejka(n);
 	kolejka.dodaj_wartosc(start, 0);
@@ -184,36 +184,7 @@ dane* Dijkstra_lista(lista* graf, int n, int start)
 	return tab;
 }
 
-//void wypiszsciezke(dane d, int j) //wypisywanie calej sciezki
-//{
-//	if (d.poprzednik == -1)
-//		return;
-//	wypiszsciezke(d.poprzednik, j);
-//	cout << j;
-//}
-
-void wypiszdane(int i, dane d) 
-{
-	cout << i << "\t";
-	if (!d.odwiedzony) 
-	{
-		cout << "nieodwiedzony";
-	}
-	else 
-	{
-		if (d.poprzednik == -1)
-			cout << "brak";
-		else
-		{
-			cout << d.poprzednik;
-		}
-		cout << "\t" << d.dystans;
-	}
-	cout << endl;
-}
-
-
-void wypiszdane2(dane* d, int rozmiar)
+void wypiszdane(dane* d, int rozmiar)
 {
 	int pom;
 	for (int i = 0; i < rozmiar; i++)
