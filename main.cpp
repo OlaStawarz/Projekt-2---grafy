@@ -30,7 +30,7 @@ int main()
 	odczyt.zapiszczas_macierz(d);
 
 	cout << "Rozwiazanie dla reprezentacji w postaci macierzy sasiedztwa: " << endl;
-	cout << "Poczatek\tSciezka\tDystans" << endl;
+	cout << "Pocz.\tDroga\tDystans" << endl;
 	wypiszdane(tab, rozmiar);
 
 	lista* graf = konwertuj(macierz, rozmiar); //kontwersja
@@ -40,7 +40,7 @@ int main()
 	odczyt.zapiszczas_lista(d);
 
 	cout << "Rozwiazanie dla reprezentacji w postaci listy sasiedztwa: " << endl;
-	cout << "Poczatek\tSciezka.\tDystans" << endl;
+	cout << "Pocz.\tDroga\tDystans" << endl;
 	wypiszdane(tab, rozmiar);
 
 	
